@@ -1,1447 +1,719 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spice Haven - Premium Restaurant</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aastin Ka Sanp</title>
     <style>
-        :root {
-            --primary: #FFD700;
-            --primary-dark: #FFC300;
-            --accent: #FF5733;
-            --dark: #1A1A1A;
-            --light: #FFFFFF;
-            --gray: #F5F5F5;
-            --gray-dark: #333333;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
-        
-        html {
-            scroll-behavior: smooth;
-        }
-        
+
         body {
-            font-family: 'Poppins', sans-serif;
-            line-height: 1.6;
-            color: var(--light);
-            background-color: var(--dark);
-            overflow-x: hidden;
-        }
-        
-        h1, h2, h3, h4 {
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
-            line-height: 1.2;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        section {
-            padding: 100px 0;
-        }
-        
-        /* Language Switcher */
-        .lang-switcher {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1001;
+            background: #0a0f1e;
+            min-height: 100vh;
             display: flex;
-            gap: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Arial, sans-serif;
             padding: 5px;
-            box-shadow: var(--shadow);
         }
-        
-        .lang-btn {
-            background: transparent;
-            border: none;
-            color: var(--light);
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: var(--transition);
-        }
-        
-        .lang-btn.active {
-            background: var(--accent);
-            color: var(--light);
-        }
-        
-        /* Header & Navigation */
-        header {
-            position: fixed;
+
+        .game-box {
+            background: #1a2639;
+            padding: 15px;
+            border-radius: 30px;
             width: 100%;
-            top: 0;
-            z-index: 1000;
-            background: rgba(26, 26, 26, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 20px 0;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            max-width: 380px;
+            box-shadow: 0 10px 0 #0f172a;
         }
-        
-        .header-container {
+
+        /* Header */
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: #2d3b52;
+            padding: 12px 18px;
+            border-radius: 40px;
+            margin-bottom: 15px;
         }
-        
-        .logo {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--primary);
-            text-decoration: none;
+
+        .title {
+            color: #ffd700;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .score-box {
+            background: #ffd700;
+            padding: 6px 15px;
+            border-radius: 30px;
+            color: #1a2639;
+            font-weight: bold;
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Game Screen */
+        .screen {
+            background: #0f1a2f;
+            border-radius: 20px;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 3px solid #ffd700;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1/1;
+            background: #0a1424;
+            border-radius: 12px;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            background: #2d3b52;
+            padding: 8px 15px;
+            border-radius: 30px;
+        }
+
+        .status {
             display: flex;
             align-items: center;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .dot.green { background: #2ecc71; box-shadow: 0 0 10px #2ecc71; }
+        .dot.yellow { background: #f1c40f; box-shadow: 0 0 10px #f1c40f; }
+        .dot.red { background: #e74c3c; box-shadow: 0 0 10px #e74c3c; }
+
+        .mode-badge {
+            background: #ffd700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #1a2639;
+        }
+
+        /* Keyboard Style Buttons - Like Real Keyboard */
+        .keyboard-container {
+            background: #2d3b52;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: inset 0 -5px 0 #1a2639;
+        }
+
+        .keyboard-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            justify-content: center;
+        }
+
+        .keyboard-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .key {
+            background: linear-gradient(145deg, #4a4e69, #2d3b52);
+            border: none;
+            border-radius: 12px;
+            color: #ffd700;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 15px 20px;
+            min-width: 70px;
+            box-shadow: 
+                0 5px 0 #1a2639,
+                0 10px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: all 0.05s ease;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            border-bottom: 3px solid #ffd700;
+        }
+
+        .key:active {
+            transform: translateY(5px);
+            box-shadow: 0 2px 0 #1a2639;
+        }
+
+        .key.small {
+            min-width: 50px;
+            padding: 15px 10px;
+        }
+
+        .key.wide {
+            min-width: 100px;
+        }
+
+        .key.space {
+            min-width: 200px;
+            font-size: 16px;
+            background: linear-gradient(145deg, #3d405b, #2d3b52);
+        }
+
+        .key.ctrl {
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
+            color: white;
+            font-size: 14px;
+        }
+
+        /* Bottom Controls */
+        .bottom-controls {
+            display: flex;
             gap: 10px;
         }
-        
-        .logo i {
-            color: var(--accent);
-        }
-        
-        .nav-links {
+
+        .control-btn {
+            flex: 1;
+            background: #2d3b52;
+            border: none;
+            padding: 15px;
+            border-radius: 25px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            border: 1px solid #ffd700;
             display: flex;
-            gap: 30px;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            box-shadow: 0 5px 0 #1a2639;
         }
-        
-        .nav-links a {
-            color: var(--light);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 16px;
+
+        .control-btn:active {
+            transform: translateY(5px);
+            box-shadow: none;
+        }
+
+        .control-btn.settings {
+            background: #4a3b8c;
+            border-color: #9d7bff;
+        }
+
+        /* Settings Panel */
+        .settings-panel {
+            background: #2d3b52;
+            border-radius: 30px;
+            padding: 20px;
+            margin-top: 15px;
+            display: none;
+            border: 2px solid #ffd700;
+        }
+
+        .settings-panel.show {
+            display: block;
+        }
+
+        .settings-title {
+            color: #ffd700;
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .speed-btn {
+            background: #ffd700;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 25px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #1a2639;
+            box-shadow: 0 3px 0 #b8860b;
+        }
+
+        .speed-btn:active {
+            transform: translateY(3px);
+            box-shadow: none;
+        }
+
+        .speed-value {
+            font-size: 20px;
+            font-weight: bold;
+            min-width: 45px;
+            text-align: center;
+            color: #ffd700;
+        }
+
+        .toggle-switch {
+            width: 60px;
+            height: 30px;
+            background: #1a2639;
+            border-radius: 30px;
             position: relative;
-            transition: var(--transition);
+            cursor: pointer;
+            border: 2px solid #ffd700;
         }
-        
-        .nav-links a:hover {
-            color: var(--primary);
+
+        .toggle-switch.active {
+            background: #ffd700;
         }
-        
-        .nav-links a::after {
+
+        .toggle-switch::after {
             content: '';
             position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent);
-            transition: var(--transition);
-        }
-        
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-        
-        .mobile-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--light);
-            font-size: 24px;
-            cursor: pointer;
-        }
-        
-        /* Hero Section */
-        .hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero-content {
-            max-width: 700px;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .tagline {
-            color: var(--primary);
-            font-size: 18px;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-        
-        .hero h1 {
-            font-size: 64px;
-            margin-bottom: 20px;
-            line-height: 1.1;
-        }
-        
-        .hero p {
-            font-size: 18px;
-            margin-bottom: 30px;
-            max-width: 600px;
-        }
-        
-        .btn {
-            display: inline-block;
-            background: var(--accent);
-            color: var(--light);
-            padding: 15px 30px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 5px 15px rgba(255, 87, 51, 0.3);
-        }
-        
-        .btn:hover {
-            background: var(--primary);
-            color: var(--dark);
-            transform: translateY(-5px);
-        }
-        
-        .btn-primary {
-            background: var(--primary);
-            color: var(--dark);
-            margin-right: 15px;
-        }
-        
-        .btn-primary:hover {
-            background: var(--accent);
-            color: var(--light);
-        }
-        
-        /* 3D Elements */
-        .floating-element {
-            position: absolute;
+            width: 26px;
+            height: 26px;
+            background: white;
             border-radius: 50%;
-            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
-            opacity: 0.3;
-            filter: blur(40px);
-            z-index: 1;
+            top: 2px;
+            left: 2px;
+            transition: 0.2s;
         }
-        
-        .floating-element:nth-child(1) {
-            width: 300px;
-            height: 300px;
-            top: 10%;
-            right: 10%;
-            animation: float 6s ease-in-out infinite;
+
+        .toggle-switch.active::after {
+            left: 32px;
         }
-        
-        .floating-element:nth-child(2) {
-            width: 200px;
-            height: 200px;
-            bottom: 20%;
-            left: 5%;
-            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
-            animation: float 8s ease-in-out infinite reverse;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-        
-        /* Menu Section */
-        .section-title {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-        
-        .section-title h2 {
-            font-size: 48px;
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-        
-        .section-title p {
-            color: #aaa;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .menu-filter {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 40px;
-        }
-        
-        .filter-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: var(--light);
-            padding: 10px 25px;
-            border-radius: 50px;
+
+        .close-settings {
+            background: #ffd700;
+            border: none;
+            padding: 12px;
+            border-radius: 25px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
-            transition: var(--transition);
+            margin-top: 10px;
+            box-shadow: 0 3px 0 #b8860b;
         }
-        
-        .filter-btn.active, .filter-btn:hover {
-            background: var(--accent);
-            border-color: var(--accent);
+
+        .close-settings:active {
+            transform: translateY(3px);
+            box-shadow: none;
         }
-        
-        .search-container {
-            max-width: 500px;
-            margin: 0 auto 50px;
-            position: relative;
-        }
-        
-        .search-bar {
-            width: 100%;
-            padding: 18px 30px;
-            padding-left: 60px;
-            border-radius: 50px;
-            border: none;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            color: var(--light);
-            font-size: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .search-bar::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-        
-        .search-icon {
-            position: absolute;
-            left: 25px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--primary);
-            font-size: 20px;
-        }
-        
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-        }
-        
-        .menu-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: var(--transition);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-        }
-        
-        .menu-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            border-color: var(--primary);
-        }
-        
-        .menu-img {
-            height: 200px;
-            width: 100%;
-            object-fit: cover;
-        }
-        
-        .menu-content {
-            padding: 25px;
-        }
-        
-        .menu-content h3 {
-            font-size: 22px;
-            margin-bottom: 10px;
-            color: var(--primary);
-        }
-        
-        .menu-content p {
-            color: #aaa;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-        
-        .price {
-            color: var(--accent);
-            font-size: 22px;
-            font-weight: 700;
-        }
-        
-        /* About Section */
-        .about {
-            background: rgba(0, 0, 0, 0.5);
-        }
-        
-        .about-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: center;
-        }
-        
-        .about-img {
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transform: perspective(1000px) rotateY(-10deg);
-            transition: var(--transition);
-        }
-        
-        .about-img:hover {
-            transform: perspective(1000px) rotateY(0deg);
-        }
-        
-        .about-img img {
-            width: 100%;
-            height: 500px;
-            object-fit: cover;
-        }
-        
-        .about-content h2 {
-            font-size: 42px;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-        
-        .about-content p {
-            margin-bottom: 20px;
-            color: #aaa;
-        }
-        
-        /* Services Section */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 30px;
-        }
-        
-        .service-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 40px 30px;
+
+        .helper {
             text-align: center;
-            transition: var(--transition);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .service-card:hover {
-            background: rgba(255, 215, 0, 0.1);
-            transform: translateY(-10px);
-            border-color: var(--primary);
-        }
-        
-        .service-icon {
-            font-size: 50px;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-        
-        .service-card h3 {
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-        
-        /* Contact Section */
-        .contact-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-        }
-        
-        .contact-info {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .contact-info h3 {
-            font-size: 28px;
-            color: var(--primary);
-            margin-bottom: 30px;
-        }
-        
-        .contact-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 25px;
-        }
-        
-        .contact-icon {
-            font-size: 24px;
-            color: var(--accent);
-            margin-right: 15px;
-            margin-top: 5px;
-        }
-        
-        .map-container {
-            border-radius: 20px;
-            overflow: hidden;
-            height: 400px;
-            box-shadow: var(--shadow);
-        }
-        
-        .map-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        
-        /* Message Form */
-        .message-form {
-            margin-top: 50px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 18px 25px;
-            border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--light);
-            font-size: 16px;
-            transition: var(--transition);
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        
-        textarea.form-control {
-            border-radius: 20px;
-            min-height: 150px;
-            resize: vertical;
-        }
-        
-        /* Coming Soon */
-        .coming-soon {
-            text-align: center;
-            padding: 100px 0;
-            background: rgba(0, 0, 0, 0.7);
-            margin: 100px 0;
-            border-radius: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .coming-soon h2 {
-            font-size: 48px;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-        
-        .coming-soon p {
-            font-size: 18px;
-            max-width: 600px;
-            margin: 0 auto 30px;
-            color: #aaa;
-        }
-        
-        /* Footer */
-        footer {
-            background: rgba(0, 0, 0, 0.9);
-            padding: 80px 0 30px;
-            margin-top: 100px;
-        }
-        
-        .footer-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 50px;
-        }
-        
-        .footer-col h3 {
-            font-size: 22px;
-            color: var(--primary);
-            margin-bottom: 25px;
-        }
-        
-        .footer-col p, .footer-col a {
-            color: #aaa;
-            margin-bottom: 10px;
-            display: block;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-        
-        .footer-col a:hover {
-            color: var(--primary);
-            padding-left: 5px;
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .social-links a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--light);
-            transition: var(--transition);
-        }
-        
-        .social-links a:hover {
-            background: var(--accent);
-            transform: translateY(-5px);
-        }
-        
-        .copyright {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #aaa;
-            font-size: 14px;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 992px) {
-            .about-container, .contact-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .hero h1 {
-                font-size: 48px;
-            }
-            
-            .nav-links {
-                position: fixed;
-                top: 80px;
-                left: 0;
-                width: 100%;
-                background: rgba(26, 26, 26, 0.98);
-                flex-direction: column;
-                align-items: center;
-                padding: 30px 0;
-                gap: 25px;
-                transform: translateY(-100%);
-                opacity: 0;
-                visibility: hidden;
-                transition: var(--transition);
-                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            }
-            
-            .nav-links.active {
-                transform: translateY(0);
-                opacity: 1;
-                visibility: visible;
-            }
-            
-            .mobile-toggle {
-                display: block;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 36px;
-            }
-            
-            .section-title h2 {
-                font-size: 36px;
-            }
-            
-            .btn {
-                padding: 12px 25px;
-            }
-            
-            section {
-                padding: 70px 0;
-            }
-            
-            .menu-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        /* Animation classes */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-        
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        /* 3D Card Effect */
-        .card-3d {
-            transform-style: preserve-3d;
-            perspective: 1000px;
-        }
-        
-        .card-3d:hover {
-            transform: rotateY(10deg) rotateX(5deg);
+            color: #666;
+            font-size: 11px;
+            margin-top: 8px;
         }
     </style>
 </head>
 <body>
-    <!-- Language Switcher -->
-    <div class="lang-switcher">
-        <button class="lang-btn active" data-lang="en">EN</button>
-        <button class="lang-btn" data-lang="hi">हिंदी</button>
-        <button class="lang-btn" data-lang="gu">ગુજરાતી</button>
-    </div>
-    
-    <!-- Header & Navigation -->
-    <header>
-        <div class="container header-container">
-            <a href="#" class="logo"><i class="fas fa-utensils"></i> <span class="text" data-key="logo">Spice Haven</span></a>
+    <div class="game-box">
+        <!-- Header -->
+        <div class="header">
+            <span class="title">🐍 आस्तीन का साँप</span>
+            <div class="score-box">
+                <span id="currentScore">0</span>
+                <span>|</span>
+                <span id="highScore">0</span>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div class="screen">
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status">
+                <span class="dot green" id="statusDot"></span>
+                <span id="statusText">खेल जारी</span>
+            </div>
+            <div class="mode-badge" id="modeDisplay">🔄 लपेट</div>
+        </div>
+
+        <!-- REAL KEYBOARD STYLE BUTTONS -->
+        <div class="keyboard-container">
+            <!-- First Row -->
+            <div class="keyboard-row">
+                <button class="key" onclick="move('up')">▲</button>
+            </div>
             
-            <button class="mobile-toggle" id="mobileToggle">
-                <i class="fas fa-bars"></i>
+            <!-- Second Row -->
+            <div class="keyboard-row">
+                <button class="key" onclick="move('left')">◀</button>
+                <button class="key" onclick="move('down')">▼</button>
+                <button class="key" onclick="move('right')">▶</button>
+            </div>
+            
+            <!-- Third Row - Space bar style for pause -->
+            <div class="keyboard-row">
+                <button class="key space" onclick="togglePause()" id="pauseBtn">␣ रोकें</button>
+            </div>
+        </div>
+
+        <!-- Bottom Controls -->
+        <div class="bottom-controls">
+            <button class="control-btn" onclick="resetGame()">
+                <span>🔄</span> नया
             </button>
-            
-            <nav class="nav-links" id="navLinks">
-                <a href="#home" class="nav-link" data-key="home">Home</a>
-                <a href="#menu" class="nav-link" data-key="menu">Menu</a>
-                <a href="#about" class="nav-link" data-key="about">About Us</a>
-                <a href="#services" class="nav-link" data-key="services">Services</a>
-                <a href="#contact" class="nav-link" data-key="contact">Contact</a>
-            </nav>
+            <button class="control-btn settings" onclick="toggleSettings()">
+                <span>⚙️</span> सेटिंग
+            </button>
         </div>
-    </header>
-    
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="floating-element"></div>
-        <div class="floating-element"></div>
-        
-        <div class="container hero-content">
-            <div class="tagline" data-key="tagline">Experience Culinary Excellence</div>
-            <h1 class="fade-in" data-key="heroTitle">Taste the Flavors of <span style="color: var(--accent)">Excellence</span></h1>
-            <p class="fade-in" data-key="heroDesc">Welcome to Spice Haven, where tradition meets innovation. We serve authentic fast food with a modern twist, prepared with the finest ingredients and passion.</p>
-            <div class="fade-in">
-                <a href="#menu" class="btn btn-primary" data-key="viewMenu">View Menu</a>
-                <a href="#contact" class="btn" data-key="reserveTable">Reserve a Table</a>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Menu Section -->
-    <section id="menu">
-        <div class="container">
-            <div class="section-title">
-                <h2 class="fade-in" data-key="menuTitle">Our Menu</h2>
-                <p class="fade-in" data-key="menuSubtitle">Discover our delicious selection of fast food favorites, made with premium ingredients.</p>
-            </div>
+
+        <!-- Settings Panel -->
+        <div class="settings-panel" id="settingsPanel">
+            <div class="settings-title">⚙️ सेटिंग</div>
             
-            <!-- Search Bar -->
-            <div class="search-container fade-in">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-bar" id="menuSearch" placeholder="Search for your favorite dish..." data-placeholder-en="Search for your favorite dish..." data-placeholder-hi="अपने पसंदीदा व्यंजन की खोज करें..." data-placeholder-gu="તમારી મનપસંદ વાનગી શોધો...">
+            <!-- Speed Control -->
+            <div class="setting-row">
+                <span>गति</span>
+                <div class="speed-control">
+                    <button class="speed-btn" onclick="changeSpeed(-1)">-</button>
+                    <span class="speed-value" id="speedValue">8</span>
+                    <button class="speed-btn" onclick="changeSpeed(1)">+</button>
+                </div>
             </div>
-            
-            <!-- Menu Filter -->
-            <div class="menu-filter fade-in">
-                <button class="filter-btn active" data-filter="all" data-key="all">All Items</button>
-                <button class="filter-btn" data-filter="pizza" data-key="pizza">Pizza</button>
-                <button class="filter-btn" data-filter="burger" data-key="burger">Burgers</button>
-                <button class="filter-btn" data-filter="pasta" data-key="pasta">Pasta</button>
-                <button class="filter-btn" data-filter="dessert" data-key="dessert">Desserts</button>
+
+            <!-- Wrap Mode Toggle -->
+            <div class="setting-row">
+                <span>लपेट मोड</span>
+                <div class="toggle-switch" id="wrapToggle" onclick="toggleWrap()"></div>
             </div>
-            
-            <!-- Menu Items -->
-            <div class="menu-grid" id="menuItems">
-                <!-- Menu items will be dynamically loaded here -->
+
+            <!-- Keyboard Control Info -->
+            <div class="setting-row" style="justify-content: center; color: #888; font-size: 12px;">
+                ← ↑ → ↓ कीबोर्ड से भी खेलें
             </div>
+
+            <button class="close-settings" onclick="toggleSettings()">बंद करें</button>
         </div>
-    </section>
-    
-    <!-- About Us Section -->
-    <section id="about" class="about">
-        <div class="container">
-            <div class="about-container">
-                <div class="about-img fade-in card-3d">
-                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Restaurant interior">
-                </div>
-                <div class="about-content fade-in">
-                    <h2 data-key="aboutTitle">Our Story</h2>
-                    <p data-key="aboutPara1">Spice Haven was born from a passion for creating exceptional fast food experiences. Our founders, with over 20 years in the culinary industry, wanted to bring together the best flavors from around the world in a modern, comfortable setting.</p>
-                    <p data-key="aboutPara2">We believe that great food doesn't have to be complicated. That's why we focus on perfecting classic dishes with premium ingredients and innovative techniques.</p>
-                    <p data-key="aboutPara3">Our restaurant is designed to provide a memorable dining experience, from the moment you walk in to the last bite of your meal.</p>
-                    <a href="#contact" class="btn" style="margin-top: 20px;" data-key="visitUs">Visit Us Today</a>
-                </div>
-            </div>
+
+        <div class="helper">
+            कीबोर्ड की तरह बने बटन - दबाएं और खेलें
         </div>
-    </section>
-    
-    <!-- Services Section -->
-    <section id="services">
-        <div class="container">
-            <div class="section-title">
-                <h2 class="fade-in" data-key="servicesTitle">Our Services</h2>
-                <p class="fade-in" data-key="servicesSubtitle">We offer a range of services to make your dining experience exceptional.</p>
-            </div>
-            
-            <div class="services-grid">
-                <div class="service-card fade-in card-3d">
-                    <div class="service-icon"><i class="fas fa-concierge-bell"></i></div>
-                    <h3 data-key="dineIn">Dine-In Experience</h3>
-                    <p data-key="dineInDesc">Enjoy our comfortable, modern dining area with premium ambiance and excellent service.</p>
-                </div>
-                
-                <div class="service-card fade-in card-3d">
-                    <div class="service-icon"><i class="fas fa-birthday-cake"></i></div>
-                    <h3 data-key="events">Special Events</h3>
-                    <p data-key="eventsDesc">Host your birthdays, anniversaries, and corporate events in our private dining area.</p>
-                </div>
-                
-                <div class="service-card fade-in card-3d">
-                    <div class="service-icon"><i class="fas fa-truck"></i></div>
-                    <h3 data-key="takeaway">Takeaway</h3>
-                    <p data-key="takeawayDesc">Order your favorite dishes to enjoy at home with our convenient takeaway service.</p>
-                </div>
-                
-                <div class="service-card fade-in card-3d">
-                    <div class="service-icon"><i class="fas fa-glass-cheers"></i></div>
-                    <h3 data-key="catering">Catering</h3>
-                    <p data-key="cateringDesc">Let us cater your next event with our delicious selection of fast food favorites.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Coming Soon Section -->
-    <section>
-        <div class="container">
-            <div class="coming-soon fade-in">
-                <h2 data-key="comingSoonTitle">Home Delivery Coming Soon!</h2>
-                <p data-key="comingSoonDesc">We're working hard to bring our delicious food directly to your doorstep. Our home delivery service will launch soon, so you can enjoy Spice Haven favorites from the comfort of your home.</p>
-                <a href="#contact" class="btn" data-key="notifyMe">Notify Me When Available</a>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Contact Section -->
-    <section id="contact">
-        <div class="container">
-            <div class="section-title">
-                <h2 class="fade-in" data-key="contactTitle">Contact Us</h2>
-                <p class="fade-in" data-key="contactSubtitle">Get in touch with us for reservations, inquiries, or feedback.</p>
-            </div>
-            
-            <div class="contact-container">
-                <div class="contact-info fade-in">
-                    <h3 data-key="contactInfo">Contact Information</h3>
-                    
-                    <div class="contact-item">
-                        <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
-                        <div>
-                            <h4 data-key="addressTitle">Address</h4>
-                            <p data-key="address">123 Gourmet Street, Food District<br>Mumbai, Maharashtra 400001</p>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-item">
-                        <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
-                        <div>
-                            <h4 data-key="phoneTitle">Phone</h4>
-                            <p>+91 98765 43210</p>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-item">
-                        <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-                        <div>
-                            <h4 data-key="emailTitle">Email</h4>
-                            <p>info@spicehaven.com</p>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-item">
-                        <div class="contact-icon"><i class="fas fa-clock"></i></div>
-                        <div>
-                            <h4 data-key="hoursTitle">Opening Hours</h4>
-                            <p data-key="hours">Monday - Sunday: 11:00 AM - 11:00 PM</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="map-container fade-in card-3d">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.716742093548!2d72.83122031538469!3d19.075268987110325!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c91130392c07%3A0x3c47bf391c8de931!2sColaba%2C%20Mumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1688398765432!5m2!1sen!2sin" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                </div>
-            </div>
-            
-            <!-- Message Form -->
-            <div class="message-form fade-in">
-                <h3 data-key="sendMessage">Send us a Message</h3>
-                <form id="contactForm">
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="name" placeholder="Your Name" data-placeholder-en="Your Name" data-placeholder-hi="आपका नाम" data-placeholder-gu="તમારું નામ" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <input type="email" class="form-control" id="email" placeholder="Your Email" data-placeholder-en="Your Email" data-placeholder-hi="आपका ईमेल" data-placeholder-gu="તમારું ઇમેઇલ" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="subject" placeholder="Subject" data-placeholder-en="Subject" data-placeholder-hi="विषय" data-placeholder-gu="વિષય" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <textarea class="form-control" id="message" placeholder="Your Message" data-placeholder-en="Your Message" data-placeholder-hi="आपका संदेश" data-placeholder-gu="તમારો સંદેશ" required></textarea>
-                    </div>
-                    
-                    <button type="submit" class="btn" data-key="sendMessageBtn">Send Message</button>
-                </form>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-col">
-                    <h3 data-key="logo">Spice Haven</h3>
-                    <p data-key="footerDesc">Experience culinary excellence at Spice Haven, where we serve premium fast food with passion and innovation.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-tripadvisor"></i></a>
-                    </div>
-                </div>
-                
-                <div class="footer-col">
-                    <h3 data-key="quickLinks">Quick Links</h3>
-                    <a href="#home" data-key="home">Home</a>
-                    <a href="#menu" data-key="menu">Menu</a>
-                    <a href="#about" data-key="about">About Us</a>
-                    <a href="#services" data-key="services">Services</a>
-                    <a href="#contact" data-key="contact">Contact</a>
-                </div>
-                
-                <div class="footer-col">
-                    <h3 data-key="contactInfo">Contact Info</h3>
-                    <p data-key="address">123 Gourmet Street, Food District, Mumbai</p>
-                    <p>+91 98765 43210</p>
-                    <p>info@spicehaven.com</p>
-                </div>
-                
-                <div class="footer-col">
-                    <h3 data-key="openingHours">Opening Hours</h3>
-                    <p data-key="hours">Monday - Sunday: 11:00 AM - 11:00 PM</p>
-                    <p data-key="holidays">Open on all public holidays</p>
-                </div>
-            </div>
-            
-            <div class="copyright">
-                <p>&copy; <span id="currentYear"></span> Spice Haven. <span data-key="rightsReserved">All rights reserved.</span></p>
-            </div>
-        </div>
-    </footer>
-    
+    </div>
+
     <script>
-        // Current Year for Copyright
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        // Game setup
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
         
-        // Mobile Navigation Toggle
-        const mobileToggle = document.getElementById('mobileToggle');
-        const navLinks = document.getElementById('navLinks');
+        const GRID_SIZE = 12;
+        const CELL_SIZE = 400 / GRID_SIZE;
         
-        mobileToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            mobileToggle.innerHTML = navLinks.classList.contains('active') 
-                ? '<i class="fas fa-times"></i>' 
-                : '<i class="fas fa-bars"></i>';
-        });
+        // Game state
+        let snake = [{x: 6, y: 6}];
+        let direction = {x: 1, y: 0};
+        let nextDirection = {x: 1, y: 0};
+        let food = {};
+        let score = 0;
+        let highScore = localStorage.getItem('aastinKaSanp') || 0;
+        let speed = 8;
+        let gameLoop;
+        let paused = false;
+        let wrapMode = true;
+        let gameActive = true;
         
-        // Close mobile menu when clicking a link
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
-            });
-        });
+        // Initialize
+        function init() {
+            snake = [{x: 6, y: 6}];
+            direction = {x: 1, y: 0};
+            nextDirection = {x: 1, y: 0};
+            score = 0;
+            gameActive = true;
+            paused = false;
+            document.getElementById('pauseBtn').innerHTML = '␣ रोकें';
+            updateStatus();
+            generateFood();
+            updateScore();
+            draw();
+        }
         
-        // Language Data
-        const languageData = {
-            en: {
-                logo: "Spice Haven",
-                home: "Home",
-                menu: "Menu",
-                about: "About Us",
-                services: "Services",
-                contact: "Contact",
-                tagline: "Experience Culinary Excellence",
-                heroTitle: "Taste the Flavors of Excellence",
-                heroDesc: "Welcome to Spice Haven, where tradition meets innovation. We serve authentic fast food with a modern twist, prepared with the finest ingredients and passion.",
-                viewMenu: "View Menu",
-                reserveTable: "Reserve a Table",
-                menuTitle: "Our Menu",
-                menuSubtitle: "Discover our delicious selection of fast food favorites, made with premium ingredients.",
-                all: "All Items",
-                pizza: "Pizza",
-                burger: "Burgers",
-                pasta: "Pasta",
-                dessert: "Desserts",
-                aboutTitle: "Our Story",
-                aboutPara1: "Spice Haven was born from a passion for creating exceptional fast food experiences. Our founders, with over 20 years in the culinary industry, wanted to bring together the best flavors from around the world in a modern, comfortable setting.",
-                aboutPara2: "We believe that great food doesn't have to be complicated. That's why we focus on perfecting classic dishes with premium ingredients and innovative techniques.",
-                aboutPara3: "Our restaurant is designed to provide a memorable dining experience, from the moment you walk in to the last bite of your meal.",
-                visitUs: "Visit Us Today",
-                servicesTitle: "Our Services",
-                servicesSubtitle: "We offer a range of services to make your dining experience exceptional.",
-                dineIn: "Dine-In Experience",
-                dineInDesc: "Enjoy our comfortable, modern dining area with premium ambiance and excellent service.",
-                events: "Special Events",
-                eventsDesc: "Host your birthdays, anniversaries, and corporate events in our private dining area.",
-                takeaway: "Takeaway",
-                takeawayDesc: "Order your favorite dishes to enjoy at home with our convenient takeaway service.",
-                catering: "Catering",
-                cateringDesc: "Let us cater your next event with our delicious selection of fast food favorites.",
-                comingSoonTitle: "Home Delivery Coming Soon!",
-                comingSoonDesc: "We're working hard to bring our delicious food directly to your doorstep. Our home delivery service will launch soon, so you can enjoy Spice Haven favorites from the comfort of your home.",
-                notifyMe: "Notify Me When Available",
-                contactTitle: "Contact Us",
-                contactSubtitle: "Get in touch with us for reservations, inquiries, or feedback.",
-                contactInfo: "Contact Information",
-                addressTitle: "Address",
-                address: "123 Gourmet Street, Food District\nMumbai, Maharashtra 400001",
-                phoneTitle: "Phone",
-                emailTitle: "Email",
-                hoursTitle: "Opening Hours",
-                hours: "Monday - Sunday: 11:00 AM - 11:00 PM",
-                sendMessage: "Send us a Message",
-                sendMessageBtn: "Send Message",
-                footerDesc: "Experience culinary excellence at Spice Haven, where we serve premium fast food with passion and innovation.",
-                quickLinks: "Quick Links",
-                openingHours: "Opening Hours",
-                holidays: "Open on all public holidays",
-                rightsReserved: "All rights reserved."
-            },
-            hi: {
-                logo: "स्पाइस हेवन",
-                home: "होम",
-                menu: "मेन्यू",
-                about: "हमारे बारे में",
-                services: "सेवाएं",
-                contact: "संपर्क करें",
-                tagline: "पाक कला उत्कृष्टता का अनुभव करें",
-                heroTitle: "उत्कृष्टता के स्वाद का आनंद लें",
-                heroDesc: "स्पाइस हेवन में आपका स्वागत है, जहां परंपरा नवाचार से मिलती है। हम आधुनिक मोड़ के साथ प्रामाणिक फास्ट फूड परोसते हैं, जो उत्कृष्ट सामग्री और जुनून के साथ तैयार किया जाता है।",
-                viewMenu: "मेन्यू देखें",
-                reserveTable: "टेबल रिजर्व करें",
-                menuTitle: "हमारा मेन्यू",
-                menuSubtitle: "प्रीमियम सामग्री से बने फास्ट फूड पसंदीदा व्यंजनों के हमारे स्वादिष्ट चयन की खोज करें।",
-                all: "सभी आइटम",
-                pizza: "पिज़्ज़ा",
-                burger: "बर्गर",
-                pasta: "पास्ता",
-                dessert: "डेज़र्ट",
-                aboutTitle: "हमारी कहानी",
-                aboutPara1: "स्पाइस हेवन असाधारण फास्ट फूड अनुभव बनाने के जुनून से पैदा हुआ था। पाक उद्योग में 20 से अधिक वर्षों के अनुभव के साथ, हमारे संस्थापक दुनिया भर के सर्वोत्तम स्वादों को एक आधुनिक, आरामदायक वातावरण में लाना चाहते थे।",
-                aboutPara2: "हमारा मानना है कि महान भोजन जटिल नहीं होना चाहिए। इसलिए हम प्रीमियम सामग्री और अभिनव तकनीकों के साथ क्लासिक व्यंजनों को पूर्ण करने पर ध्यान केंद्रित करते हैं।",
-                aboutPara3: "हमारा रेस्तरां एक यादगार डाइनिंग अनुभव प्रदान करने के लिए डिज़ाइन किया गया है, जब आप अंदर आते हैं तो आपके भोजन के अंतिम कौर तक।",
-                visitUs: "आज ही हमें देखें",
-                servicesTitle: "हमारी सेवाएं",
-                servicesSubtitle: "हम आपके डाइनिंग अनुभव को असाधारण बनाने के लिए सेवाओं की एक श्रृंखला प्रदान करते हैं।",
-                dineIn: "डाइन-इन अनुभव",
-                dineInDesc: "प्रीमियम वातावरण और उत्कृष्ट सेवा के साथ हमारे आरामदायक, आधुनिक डाइनिंग क्षेत्र का आनंद लें।",
-                events: "विशेष आयोजन",
-                eventsDesc: "हमारे निजी डाइनिंग क्षेत्र में अपने जन्मदिन, वर्षगांठ और कॉर्पोरेट कार्यक्रम आयोजित करें।",
-                takeaway: "टेकअवे",
-                takeawayDesc: "हमारी सुविधाजनक टेकअवे सेवा के साथ घर पर आनंद लेने के लिए अपने पसंदीदा व्यंजन ऑर्डर करें।",
-                catering: "केटरिंग",
-                cateringDesc: "हमें अपने अगले आयोजन के लिए फास्ट फूड पसंदीदा व्यंजनों के हमारे स्वादिष्ट चयन के साथ केटर करने दें।",
-                comingSoonTitle: "होम डिलीवरी जल्द ही आ रही है!",
-                comingSoonDesc: "हम आपके दरवाजे तक हमारे स्वादिष्ट भोजन को सीधे लाने के लिए कड़ी मेहनत कर रहे हैं। हमारी होम डिलीवरी सेवा जल्द ही लॉन्च होगी, ताकि आप अपने घर के आराम से स्पाइस हेवन पसंदीदा व्यंजनों का आनंद ले सकें।",
-                notifyMe: "उपलब्ध होने पर मुझे सूचित करें",
-                contactTitle: "हमसे संपर्क करें",
-                contactSubtitle: "आरक्षण, पूछताछ, या प्रतिक्रिया के लिए हमसे संपर्क करें।",
-                contactInfo: "संपर्क जानकारी",
-                addressTitle: "पता",
-                address: "123 गॉरमेट स्ट्रीट, फूड डिस्ट्रिक्ट\nमुंबई, महाराष्ट्र 400001",
-                phoneTitle: "फ़ोन",
-                emailTitle: "ईमेल",
-                hoursTitle: "खुलने का समय",
-                hours: "सोमवार - रविवार: सुबह 11:00 बजे - रात 11:00 बजे",
-                sendMessage: "हमें एक संदेश भेजें",
-                sendMessageBtn: "संदेश भेजें",
-                footerDesc: "स्पाइस हेवन में पाक कला उत्कृष्टता का अनुभव करें, जहां हम जुनून और नवाचार के साथ प्रीमियम फास्ट फूड परोसते हैं।",
-                quickLinks: "त्वरित लिंक",
-                openingHours: "खुलने का समय",
-                holidays: "सभी सार्वजनिक छुट्टियों पर खुला",
-                rightsReserved: "सर्वाधिकार सुरक्षित।"
-            },
-            gu: {
-                logo: "સ્પાઇસ હેવન",
-                home: "હોમ",
-                menu: "મેનૂ",
-                about: "અમારા વિશે",
-                services: "સેવાઓ",
-                contact: "સંપર્ક કરો",
-                tagline: "રસોઈ શ્રેષ્ઠતાનો અનુભવ કરો",
-                heroTitle: "શ્રેષ્ઠતાના સ્વાદનો આસ્વાદ લો",
-                heroDesc: "સ્પાઇસ હેવનમાં આપનું સ્વાગત છે, જ્યાં પરંપરા નવીનતા સાથે મળે છે. અમે આધુનિક મોડ સાથે સાચી ફાસ્ટ ફૂડ પીરસીએ છીએ, જે શ્રેષ્ઠ સામગ્રી અને જુસ્સાથી તૈયાર કરવામાં આવે છે.",
-                viewMenu: "મેનૂ જુઓ",
-                reserveTable: "ટેબલ રિઝર્વ કરો",
-                menuTitle: "અમારું મેનૂ",
-                menuSubtitle: "પ્રીમિયમ સામગ્રીઓથી બનાવેલા ફાસ્ટ ફૂડ મનપસંદ વાનગીઓના અમારા સ્વાદિષ્ટ પસંદગીની શોધ કરો.",
-                all: "બધી વસ્તુઓ",
-                pizza: "પિઝા",
-                burger: "બર્ગર",
-                pasta: "પાસ્તા",
-                dessert: "ડેઝર્ટ",
-                aboutTitle: "અમારી કહાણી",
-                aboutPara1: "સ્પાઇસ હેવન અસાધારણ ફાસ્ટ ફૂડ અનુભવો બનાવવાના જુસ્સાથી જન્મ્યું હતું. રસોઈ ઉદ્યોગમાં 20 વર્ષથી વધુના અનુભવ સાથે, અમારા સ્થાપકો વિશ્વભરના શ્રેષ્ઠ સ્વાદોને આધુનિક, આરામદાયક સેટિંગમાં લાવવા માંગતા હતા.",
-                aboutPara2: "અમારો માનવું છે કે મહાન ખોરાક જટિલ હોવો જરૂરી નથી. તેથી જ અમે પ્રીમિયમ સામગ્રી અને નવીન તકનીકો સાથે ક્લાસિક વાનગીઓને સંપૂર્ણ કરવા પર ધ્યાન કેન્દ્રિત કરીએ છીએ.",
-                aboutPara3: "અમારું રેસ્ટોરન્ટ એક યાદગાર ડાઇનિંગ અનુભવ પ્રદાન કરવા માટે ડિઝાઇન કરવામાં આવ્યું છે, જ્યારે તમે અંદર આવો છો ત્યારથી તમારા ભોજનના છેલ્લા કોડ સુધી.",
-                visitUs: "આજે જ અમને મળો",
-                servicesTitle: "અમારી સેવાઓ",
-                servicesSubtitle: "તમારા ડાઇનિંગ અનુભવને અસાધારણ બનાવવા માટે અમે સેવાઓની શ્રેણી ઓફર કરીએ છીએ.",
-                dineIn: "ડાઇન-ઇન અનુભવ",
-                dineInDesc: "પ્રીમિયમ એમ્બિઅન્સ અને ઉત્તમ સેવા સાથે અમારા આરામદાયક, આધુનિક ડાઇનિંગ એરિયાનો આનંદ માણો.",
-                events: "ખાસ કાર્યક્રમો",
-                eventsDesc: "અમારા ખાનગી ડાઇનિંગ એરિયામાં તમારા જન્મદિવસ, વર્ષગાંઠ અને કોર્પોરેટ ઇવેન્ટ્સ યોજો.",
-                takeaway: "ટેકઅવે",
-                takeawayDesc: "અમારી સુવિધાજનક ટેકઅવે સેવા સાથે ઘરે આનંદ લેવા માટે તમારી મનપસંદ વાનગીઓ ઓર્ડર કરો.",
-                catering: "કેટરિંગ",
-                cateringDesc: "અમને તમારા આગામી ઇવેન્ટ માટે ફાસ્ટ ફૂડ મનપસંદ વાનગીઓના અમારા સ્વાદિષ્ટ પસંદગી સાથે કેટર કરવા દો.",
-                comingSoonTitle: "હોમ ડિલિવરી ટૂંક સમયમાં આવી રહી છે!",
-                comingSoonDesc: "અમે તમારા દરવાજે સીધા અમારા સ્વાદિષ્ટ ખોરાક લાવવા માટે મહેનત કરી રહ્યા છીએ. અમારી હોમ ડિલિવરી સેવા ટૂંક સમયમાં લોન્ચ થશે, જેથી તમે તમારા ઘરના આરામથી સ્પાઇસ હેવન મનપસંદ વાનગીઓનો આનંદ લઈ શકો.",
-                notifyMe: "ઉપલબ્ધ થાય ત્યારે મને સૂચિત કરો",
-                contactTitle: "અમારો સંપર્ક કરો",
-                contactSubtitle: "રિઝર્વેશન, પૂછપરછ અથવા પ્રતિસાદ માટે અમારો સંપર્ક કરો.",
-                contactInfo: "સંપર્ક માહિતી",
-                addressTitle: "સરનામું",
-                address: "123 ગોરમેટ સ્ટ્રીટ, ફૂડ ડિસ્ટ્રિક્ટ\nમુંબઈ, મહારાષ્ટ્ર 400001",
-                phoneTitle: "ફોન",
-                emailTitle: "ઇમેઇલ",
-                hoursTitle: "ખુલવાનો સમય",
-                hours: "સોમવાર - રવિવાર: સવારે 11:00 - રાત્રે 11:00",
-                sendMessage: "અમને એક સંદેશ મોકલો",
-                sendMessageBtn: "સંદેશ મોકલો",
-                footerDesc: "સ્પાઇસ હેવનમાં રસોઈ શ્રેષ્ઠતાનો અનુભવ કરો, જ્યાં અમે જુસ્સો અને નવીનતા સાથે પ્રીમિયમ ફાસ્ટ ફૂડ પીરસીએ છીએ.",
-                quickLinks: "ઝડપી લિંક્સ",
-                openingHours: "ખુલવાનો સમય",
-                holidays: "બધી જાહેર રજાઓ પર ખુલ્લું",
-                rightsReserved: "બધા હક્કો અનામત."
+        // Generate food
+        function generateFood() {
+            do {
+                food = {
+                    x: Math.floor(Math.random() * GRID_SIZE),
+                    y: Math.floor(Math.random() * GRID_SIZE)
+                };
+            } while (snake.some(seg => seg.x === food.x && seg.y === food.y));
+        }
+        
+        // Move snake
+        function moveSnake() {
+            if (paused || !gameActive) return;
+            
+            direction = {...nextDirection};
+            
+            let newHead = {
+                x: snake[0].x + direction.x,
+                y: snake[0].y + direction.y
+            };
+            
+            // Wrap logic
+            if (wrapMode) {
+                if (newHead.x < 0) newHead.x = GRID_SIZE - 1;
+                if (newHead.x >= GRID_SIZE) newHead.x = 0;
+                if (newHead.y < 0) newHead.y = GRID_SIZE - 1;
+                if (newHead.y >= GRID_SIZE) newHead.y = 0;
+                
+                if (snake.some(seg => seg.x === newHead.x && seg.y === newHead.y)) {
+                    gameOver();
+                    return;
+                }
+            } else {
+                if (newHead.x < 0 || newHead.x >= GRID_SIZE || 
+                    newHead.y < 0 || newHead.y >= GRID_SIZE) {
+                    gameOver();
+                    return;
+                }
+                
+                if (snake.some(seg => seg.x === newHead.x && seg.y === newHead.y)) {
+                    gameOver();
+                    return;
+                }
             }
+            
+            snake.unshift(newHead);
+            
+            if (newHead.x === food.x && newHead.y === food.y) {
+                score++;
+                if (score > highScore) {
+                    highScore = score;
+                    localStorage.setItem('aastinKaSanp', highScore);
+                }
+                updateScore();
+                generateFood();
+            } else {
+                snake.pop();
+            }
+            
+            draw();
+        }
+        
+        // Draw game
+        function draw() {
+            ctx.clearRect(0, 0, 400, 400);
+            
+            // Grid
+            ctx.strokeStyle = '#2d3b52';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i <= GRID_SIZE; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * CELL_SIZE, 0);
+                ctx.lineTo(i * CELL_SIZE, 400);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(0, i * CELL_SIZE);
+                ctx.lineTo(400, i * CELL_SIZE);
+                ctx.stroke();
+            }
+            
+            // Draw snake
+            snake.forEach((seg, index) => {
+                const isHead = index === 0;
+                const x = seg.x * CELL_SIZE + 2;
+                const y = seg.y * CELL_SIZE + 2;
+                const size = CELL_SIZE - 4;
+                
+                ctx.shadowBlur = 10;
+                
+                if (isHead) {
+                    ctx.shadowColor = '#ffd700';
+                    ctx.fillStyle = '#ffd700';
+                    ctx.beginPath();
+                    ctx.arc(x + size/2, y + size/2, size/2, 0, Math.PI*2);
+                    ctx.fill();
+                    
+                    // Eyes
+                    ctx.shadowBlur = 0;
+                    ctx.fillStyle = '#000';
+                    if (direction.x === 1) {
+                        ctx.beginPath();
+                        ctx.arc(x + size - 6, y + 6, 3, 0, Math.PI*2);
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.arc(x + size - 6, y + size - 6, 3, 0, Math.PI*2);
+                        ctx.fill();
+                    } else if (direction.x === -1) {
+                        ctx.beginPath();
+                        ctx.arc(x + 6, y + 6, 3, 0, Math.PI*2);
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.arc(x + 6, y + size - 6, 3, 0, Math.PI*2);
+                        ctx.fill();
+                    } else if (direction.y === -1) {
+                        ctx.beginPath();
+                        ctx.arc(x + 6, y + 6, 3, 0, Math.PI*2);
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.arc(x + size - 6, y + 6, 3, 0, Math.PI*2);
+                        ctx.fill();
+                    } else if (direction.y === 1) {
+                        ctx.beginPath();
+                        ctx.arc(x + 6, y + size - 6, 3, 0, Math.PI*2);
+                        ctx.fill();
+                        ctx.beginPath();
+                        ctx.arc(x + size - 6, y + size - 6, 3, 0, Math.PI*2);
+                        ctx.fill();
+                    }
+                } else {
+                    ctx.shadowColor = '#4a90e2';
+                    ctx.fillStyle = '#4a90e2';
+                    ctx.beginPath();
+                    ctx.roundRect(x, y, size, size, 8);
+                    ctx.fill();
+                }
+            });
+            
+            // Food
+            ctx.shadowColor = '#ff4444';
+            ctx.shadowBlur = 15;
+            ctx.fillStyle = '#ff4444';
+            ctx.beginPath();
+            ctx.arc(
+                food.x * CELL_SIZE + CELL_SIZE/2,
+                food.y * CELL_SIZE + CELL_SIZE/2,
+                CELL_SIZE/2 - 4,
+                0,
+                Math.PI*2
+            );
+            ctx.fill();
+            
+            ctx.shadowBlur = 0;
+        }
+        
+        // Round rect helper
+        CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+            if (w < 2 * r) r = w / 2;
+            if (h < 2 * r) r = h / 2;
+            this.moveTo(x + r, y);
+            this.lineTo(x + w - r, y);
+            this.quadraticCurveTo(x + w, y, x + w, y + r);
+            this.lineTo(x + w, y + h - r);
+            this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+            this.lineTo(x + r, y + h);
+            this.quadraticCurveTo(x, y + h, x, y + h - r);
+            this.lineTo(x, y + r);
+            this.quadraticCurveTo(x, y, x + r, y);
+            this.closePath();
+            return this;
         };
         
-        // Language Switcher Functionality
-        const langButtons = document.querySelectorAll('.lang-btn');
-        let currentLang = 'en';
-        
-        langButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const lang = button.getAttribute('data-lang');
-                switchLanguage(lang);
-                
-                // Update active button
-                langButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-            });
-        });
-        
-        function switchLanguage(lang) {
-            currentLang = lang;
-            
-            // Update all elements with data-key attribute
-            document.querySelectorAll('[data-key]').forEach(element => {
-                const key = element.getAttribute('data-key');
-                if (languageData[lang][key]) {
-                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                        element.setAttribute('placeholder', languageData[lang][key]);
-                    } else {
-                        element.textContent = languageData[lang][key];
-                    }
-                }
-            });
-            
-            // Update placeholders for search bar and form
-            document.getElementById('menuSearch').placeholder = languageData[lang]['menuSearchPlaceholder'] || "Search for your favorite dish...";
+        // Game functions
+        function gameOver() {
+            gameActive = false;
+            updateStatus();
         }
         
-        // Menu Data
-        const menuItems = [
-            {
-                id: 1,
-                name: "Margherita Pizza",
-                nameHi: "मार्गेरिटा पिज़्ज़ा",
-                nameGu: "માર્ગેરિટા પિઝા",
-                description: "Classic pizza with tomato sauce, mozzarella cheese, and fresh basil.",
-                descriptionHi: "टमाटर सॉस, मोज़ेरेला चीज़ और ताजा तुलसी के साथ क्लासिक पिज़्ज़ा।",
-                descriptionGu: "ટામેટા સોસ, મોઝારેલા ચીઝ અને તાજી તુલસી સાથે ક્લાસિક પિઝા.",
-                price: "₹299",
-                category: "pizza",
-                image: "https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80"
-            },
-            {
-                id: 2,
-                name: "Pepperoni Pizza",
-                nameHi: "पेपरोनी पिज़्ज़ा",
-                nameGu: "પેપરોની પિઝા",
-                description: "Spicy pepperoni slices with mozzarella cheese and tomato sauce.",
-                descriptionHi: "मोज़ेरेला चीज़ और टमाटर सॉस के साथ मसालेदार पेपरोनी स्लाइस।",
-                descriptionGu: "મોઝારેલા ચીઝ અને ટામેટા સોસ સાથે મસાલેદાર પેપરોની સ્લાઇસ.",
-                price: "₹349",
-                category: "pizza",
-                image: "https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1180&q=80"
-            },
-            {
-                id: 3,
-                name: "Classic Cheeseburger",
-                nameHi: "क्लासिक चीज़बर्गर",
-                nameGu: "ક્લાસિક ચીઝબર્ગર",
-                description: "Juicy beef patty with cheddar cheese, lettuce, tomato, and special sauce.",
-                descriptionHi: "चेडर चीज़, लेट्यूस, टमाटर और विशेष सॉस के साथ रसदार बीफ पैटी।",
-                descriptionGu: "ચેડર ચીઝ, લેટ્યુસ, ટામેટા અને ખાસ સોસ સાથે રસદાર બીફ પેટી.",
-                price: "₹199",
-                category: "burger",
-                image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1098&q=80"
-            },
-            {
-                id: 4,
-                name: "Spicy Burger",
-                nameHi: "मसालेदार बर्गर",
-                nameGu: "મસાલેદાર બર્ગર",
-                description: "spicy mayo, lettuce, and pickles.",
-                descriptionHi: "स्पाइसी मेयो, लेट्यूस और अचार।",
-                descriptionGu: "સ્પાઇસી મેયો, લેટ્યુસ અને અચાર.",
-                price: "₹229",
-                category: "burger",
-                image: "https://images.unsplash.com/photo-1626074353765-517a681e40be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80"
-            },
-            {
-                id: 5,
-                name: "Creamy Alfredo Pasta",
-                nameHi: "क्रीमी अल्फ्रेडो पास्ता",
-                nameGu: "ક્રીમી આલ્ફ્રેડો પાસ્તા",
-                description: "Fettuccine pasta in a rich, creamy Alfredo sauce with parmesan cheese.",
-                descriptionHi: "पार्मेसन चीज़ के साथ एक समृद्ध, क्रीमी अल्फ्रेडो सॉस में फेटुचिनी पास्ता।",
-                descriptionGu: "પાર્મેસન ચીઝ સાથે સમૃદ્ધ, ક્રીમી આલ્ફ્રેડો સોસમાં ફેટુચીની પાસ્તા.",
-                price: "₹279",
-                category: "pasta",
-                image: "https://images.unsplash.com/photo-1598866594230-a7c12756260f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1152&q=80"
-            },
-            {
-                id: 6,
-                name: "Chocolate Lava Cake",
-                nameHi: "चॉकलेट लावा केक",
-                nameGu: "ચોકલેટ લાવા કેક",
-                description: "Warm chocolate cake with a molten chocolate center, served with vanilla ice cream.",
-                descriptionHi: "मोल्टन चॉकलेट सेंटर के साथ गर्म चॉकलेट केक, वेनिला आइसक्रीम के साथ परोसा जाता है।",
-                descriptionGu: "મોલ્ટન ચોકલેટ સેન્ટર સાથે ગરમ ચોકલેટ કેક, વેનિલા આઇસક્રીમ સાથે પીરસવામાં આવે છે.",
-                price: "₹179",
-                category: "dessert",
-                image: "https://images.unsplash.com/photo-1624353365286-3f8d62dadadf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1312&q=80"
-            },
-            {
-                id: 7,
-                name: "BBQ Pizza",
-                nameHi: "बीबीक्यू पिज़्ज़ा",
-                nameGu: "બીબીક્યૂ પિઝા",
-                description: "Grilled chicken, red onions, cilantro, and BBQ sauce on a crispy crust.",
-                descriptionHi: "क्रिस्पी क्रस्ट पर ग्रिल्ड चिकन, लाल प्याज, धनिया और बीबीक्यू सॉस।",
-                descriptionGu: "ક્રિસ્પી ક્રસ્ટ પર ગ્રિલ્ડ ચિકન, લાલ ડુંગળી, સીતાફળ અને બીબીક્યૂ સોસ.",
-                price: "₹379",
-                category: "pizza",
-                image: "https://images.unsplash.com/photo-1595708684082-a173bb3a06c5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80"
-            },
-            {
-                id: 8,
-                name: "Veggie Supreme Burger",
-                nameHi: "वेजी सुप्रीम बर्गर",
-                nameGu: "વેજી સુપ્રીમ બર્ગર",
-                description: "Grilled vegetable patty with avocado, spinach, tomato, and garlic mayo.",
-                descriptionHi: "एवोकाडो, पालक, टमाटर और लहसुन मेयो के साथ ग्रिल्ड वेजिटेबल पैटी।",
-                descriptionGu: "એવોકાડો, પાલક, ટામેટા અને લસણ મેયો સાથે ગ્રિલ્ડ વેજીટેબલ પેટી.",
-                price: "₹249",
-                category: "burger",
-                image: "https://images.unsplash.com/photo-1550319106-8c8a8b8b8b8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1069&q=80"
+        function updateStatus() {
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            
+            if (!gameActive) {
+                dot.className = 'dot red';
+                text.textContent = 'खतम';
+            } else if (paused) {
+                dot.className = 'dot yellow';
+                text.textContent = 'रुका';
+            } else {
+                dot.className = 'dot green';
+                text.textContent = 'खेल जारी';
             }
-        ];
-        
-        // Render Menu Items
-        function renderMenuItems(items) {
-            const menuContainer = document.getElementById('menuItems');
-            menuContainer.innerHTML = '';
-            
-            items.forEach(item => {
-                const name = currentLang === 'en' ? item.name : currentLang === 'hi' ? item.nameHi : item.nameGu;
-                const description = currentLang === 'en' ? item.description : currentLang === 'hi' ? item.descriptionHi : item.descriptionGu;
-                
-                const menuItem = document.createElement('div');
-                menuItem.className = 'menu-item fade-in card-3d';
-                menuItem.setAttribute('data-category', item.category);
-                
-                menuItem.innerHTML = `
-                    <img src="${item.image}" alt="${name}" class="menu-img">
-                    <div class="menu-content">
-                        <h3>${name}</h3>
-                        <p>${description}</p>
-                        <div class="price">${item.price}</div>
-                    </div>
-                `;
-                
-                menuContainer.appendChild(menuItem);
-            });
-            
-            // Re-initialize fade-in animations
-            initFadeIn();
         }
         
-        // Initialize menu with all items
-        renderMenuItems(menuItems);
-        
-        // Menu Filtering
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                // Update active button
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                
-                const filter = button.getAttribute('data-filter');
-                
-                if (filter === 'all') {
-                    renderMenuItems(menuItems);
-                } else {
-                    const filteredItems = menuItems.filter(item => item.category === filter);
-                    renderMenuItems(filteredItems);
-                }
-            });
-        });
-        
-        // Menu Search
-        const searchBar = document.getElementById('menuSearch');
-        
-        searchBar.addEventListener('input', () => {
-            const searchTerm = searchBar.value.toLowerCase();
-            
-            const filteredItems = menuItems.filter(item => {
-                const name = currentLang === 'en' ? item.name.toLowerCase() : 
-                            currentLang === 'hi' ? item.nameHi.toLowerCase() : 
-                            item.nameGu.toLowerCase();
-                
-                const description = currentLang === 'en' ? item.description.toLowerCase() : 
-                                  currentLang === 'hi' ? item.descriptionHi.toLowerCase() : 
-                                  item.descriptionGu.toLowerCase();
-                
-                return name.includes(searchTerm) || description.includes(searchTerm);
-            });
-            
-            renderMenuItems(filteredItems);
-        });
-        
-        // Contact Form Submission
-        const contactForm = document.getElementById('contactForm');
-        
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Get form values
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const subject = document.getElementById('subject').value;
-            const message = document.getElementById('message').value;
-            
-            // In a real application, you would send this data to a server
-            // For this demo, we'll just show an alert
-            alert(currentLang === 'en' 
-                ? `Thank you ${name}! Your message has been sent. We'll get back to you soon.`
-                : currentLang === 'hi'
-                ? `धन्यवाद ${name}! आपका संदेश भेज दिया गया है। हम जल्द ही आपसे संपर्क करेंगे।`
-                : `આભાર ${name}! તમારો સંદેશ મોકલવામાં આવ્યો છે. અમે ટૂંક સમયમાં તમારો સંપર્ક કરીશું.`);
-            
-            // Reset form
-            contactForm.reset();
-        });
-        
-        // Fade-in Animation on Scroll
-        function initFadeIn() {
-            const fadeElements = document.querySelectorAll('.fade-in');
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, { threshold: 0.1 });
-            
-            fadeElements.forEach(element => {
-                observer.observe(element);
-            });
+        function updateScore() {
+            document.getElementById('currentScore').textContent = score;
+            document.getElementById('highScore').textContent = highScore;
         }
         
-        // Initialize animations
-        initFadeIn();
+        function move(dir) {
+            if (!gameActive || paused) return;
+            
+            switch(dir) {
+                case 'up': 
+                    if (direction.y === 0) nextDirection = {x: 0, y: -1}; 
+                    break;
+                case 'down': 
+                    if (direction.y === 0) nextDirection = {x: 0, y: 1}; 
+                    break;
+                case 'left': 
+                    if (direction.x === 0) nextDirection = {x: -1, y: 0}; 
+                    break;
+                case 'right': 
+                    if (direction.x === 0) nextDirection = {x: 1, y: 0}; 
+                    break;
+            }
+        }
         
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
-            });
+        function changeSpeed(delta) {
+            speed = Math.min(15, Math.max(4, speed + delta));
+            document.getElementById('speedValue').textContent = speed;
+            
+            if (gameLoop) clearInterval(gameLoop);
+            gameLoop = setInterval(moveSnake, 1000 / speed);
+        }
+        
+        function togglePause() {
+            if (!gameActive) return;
+            paused = !paused;
+            document.getElementById('pauseBtn').innerHTML = paused ? '␣ शुरू' : '␣ रोकें';
+            updateStatus();
+        }
+        
+        function toggleWrap() {
+            wrapMode = !wrapMode;
+            const toggle = document.getElementById('wrapToggle');
+            toggle.classList.toggle('active');
+            document.getElementById('modeDisplay').textContent = wrapMode ? '🔄 लपेट' : '🚫 बिना लपेट';
+        }
+        
+        function resetGame() {
+            init();
+        }
+        
+        function toggleSettings() {
+            const panel = document.getElementById('settingsPanel');
+            panel.classList.toggle('show');
+        }
+        
+        // Keyboard
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowUp': move('up'); e.preventDefault(); break;
+                case 'ArrowDown': move('down'); e.preventDefault(); break;
+                case 'ArrowLeft': move('left'); e.preventDefault(); break;
+                case 'ArrowRight': move('right'); e.preventDefault(); break;
+                case ' ': togglePause(); e.preventDefault(); break;
+            }
         });
         
-        // Update search bar placeholder when language changes
-        langButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const lang = button.getAttribute('data-lang');
-                const searchBar = document.getElementById('menuSearch');
-                
-                if (lang === 'en') {
-                    searchBar.placeholder = "Search for your favorite dish...";
-                } else if (lang === 'hi') {
-                    searchBar.placeholder = "अपने पसंदीदा व्यंजन की खोज करें...";
-                } else if (lang === 'gu') {
-                    searchBar.placeholder = "તમારી મનપસંદ વાનગી શોધો...";
-                }
-            });
-        });
-        
-        // Initialize with English language
-        switchLanguage('en');
+        // Start game
+        init();
+        gameLoop = setInterval(moveSnake, 1000 / speed);
     </script>
 </body>
 </html>
